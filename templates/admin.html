@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Estandarte Cristão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fontes da nossa Catedral -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-pedra-escura: #1f1f1f;
+            --cor-texto-pedra: #d1d5db;
+            --cor-ouro: #D4AF37;
+            --cor-ouro-brilho: #FFD700;
+            --cor-vitral-fundo: rgba(12, 12, 12, 0.7);
+            --cor-vitral-texto: #F5F5F5;
+        }
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: var(--cor-pedra-escura);
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1589758133335-71883f3a59b3?q=80&w=1974&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-size: cover;
+            color: var(--cor-texto-pedra);
+        }
+        .font-cinzel {
+            font-family: 'Cinzel Decorative', serif;
+        }
+        .vitral-pane {
+            background-color: var(--cor-vitral-fundo);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--cor-ouro);
+            box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.25);
+            color: var(--cor-vitral-texto);
+        }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-8">
+    <div class="container mx-auto">
+        <h1 class="text-4xl md:text-5xl font-cinzel font-bold text-center text-[var(--cor-ouro-brilho)] mb-8" style="text-shadow: 1px 1px 3px #000;">
+            Quartel-General
+        </h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="vitral-pane p-3 rounded-md mb-6 text-center font-bold {{ 'border-[var(--cor-ouro)]' if category == 'success' else 'border-red-500' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Seção de Artigos -->
+            <div class="vitral-pane p-6 rounded-lg">
+                <h2 class="text-3xl font-cinzel font-bold mb-4 text-[var(--cor-ouro)]">Artigos</h2>
+                <a href="{{ url_for('adicionar_artigo') }}" class="inline-block bg-[var(--cor-ouro)] text-black font-bold py-2 px-4 rounded-sm hover:bg-[var(--cor-ouro-brilho)] mb-4 transition-colors">Adicionar Novo Artigo</a>
+                <ul class="max-h-96 overflow-y-auto pr-2 space-y-3">
+                    {% for artigo in artigos %}
+                        <li class="flex items-center justify-between border-t border-[var(--cor-ouro)]/30 pt-3">
+                            <div class="flex items-center gap-4">
+                                <img src="{{ url_for('static', filename='article_covers/' + artigo.nome_arquivo_capa) }}" alt="Capa" class="w-20 h-12 object-cover rounded-sm border border-black/50">
+                                <p class="font-bold">{{ artigo.titulo }}</p>
+                            </div>
+                            <div class="flex gap-2 flex-shrink-0">
+                                <a href="{{ url_for('editar_artigo', artigo_id=artigo.id) }}" class="bg-blue-700/50 text-white text-xs font-bold py-1 px-3 rounded-sm hover:bg-blue-600/70 border border-blue-500/50">Editar</a>
+                                <form action="{{ url_for('deletar_artigo', artigo_id=artigo.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este artigo?');">
+                                    <button type="submit" class="bg-red-700/50 text-white text-xs font-bold py-1 px-3 rounded-sm hover:bg-red-600/70 border border-red-500/50">Deletar</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="italic text-gray-400">Nenhum artigo cadastrado.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Seção de E-books -->
+            <div class="vitral-pane p-6 rounded-lg">
+                <h2 class="text-3xl font-cinzel font-bold mb-4 text-[var(--cor-ouro)]">E-books</h2>
+                <a href="{{ url_for('adicionar_ebook') }}" class="inline-block bg-[var(--cor-ouro)] text-black font-bold py-2 px-4 rounded-sm hover:bg-[var(--cor-ouro-brilho)] mb-4 transition-colors">Adicionar Novo E-book</a>
+                <ul class="max-h-96 overflow-y-auto pr-2 space-y-3">
+                    {% for ebook in ebooks %}
+                         <li class="flex items-center justify-between border-t border-[var(--cor-ouro)]/30 pt-3">
+                            <div class="flex items-center gap-4">
+                                <img src="{{ url_for('static', filename='covers/' + ebook.nome_arquivo_capa) }}" alt="Capa" class="w-12 h-16 object-cover rounded-sm border border-black/50">
+                                <div>
+                                    <p class="font-bold">{{ ebook.titulo }}</p>
+                                    <p class="text-sm text-gray-400">{{ ebook.categoria }}</p>
+                                </div>
+                            </div>
+                            <form action="{{ url_for('deletar_ebook', ebook_id=ebook.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este e-book? Esta ação não pode ser desfeita.');">
+                                <button type="submit" class="bg-red-700/50 text-white text-xs font-bold py-1 px-3 rounded-sm hover:bg-red-600/70 border border-red-500/50">Deletar</button>
+                            </form>
+                         </li>
+                    {% else %}
+                        <li class="italic text-gray-400">Nenhum e-book cadastrado.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-12">
+            <a href="{{ url_for('home') }}" class="text-[var(--cor-ouro)] hover:text-[var(--cor-ouro-brilho)] italic">&larr; Voltar para o site público</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Acervo - Estandarte Cristão{% endblock %}
+
+{% block content %}
+<div class="py-12 md:py-20">
+    <div class="container mx-auto px-6">
+        <!-- O Vitral Principal que contém todo o conteúdo -->
+        <div class="vitral-pane p-8 md:p-12 rounded-lg">
+
+            <!-- Seção da Biblioteca de E-books -->
+            <section id="ebooks-section">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-6xl font-cinzel font-bold tracking-wider text-[var(--cor-ouro)]">
+                        Biblioteca dos Manuscritos
+                    </h1>
+                    <p class="mt-2 text-lg text-gray-300 italic">
+                        Materiais de aprofundamento para a jornada da fé.
+                    </p>
+                </div>
+
+                <!-- Filtros e Pesquisa com Estilo Gótico -->
+                <div class="mb-12 flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <div class="relative w-full md:w-1/2 lg:w-1/3">
+                        <input id="ebook-search-input" type="search" placeholder="Buscar por manuscrito..." class="w-full bg-black/30 border border-gray-700 rounded-sm py-2 px-4 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-[var(--cor-ouro)] transition-colors">
+                    </div>
+                    <div id="ebook-filter-buttons" class="flex flex-wrap justify-center gap-2">
+                        <button data-filter="all" class="filter-btn bg-[var(--cor-ouro)] text-black font-bold py-2 px-4 rounded-sm text-sm transition-colors">Todos</button>
+                        <button data-filter="apologetica" class="filter-btn bg-black/20 border border-gray-700 text-gray-300 font-bold py-2 px-4 rounded-sm text-sm hover:bg-[var(--cor-ouro)] hover:text-black hover:border-transparent transition-colors">Apologética</button>
+                        <button data-filter="confissoes" class="filter-btn bg-black/20 border border-gray-700 text-gray-300 font-bold py-2 px-4 rounded-sm text-sm hover:bg-[var(--cor-ouro)] hover:text-black hover:border-transparent transition-colors">Confissões</button>
+                        <button data-filter="catecismos" class="filter-btn bg-black/20 border border-gray-700 text-gray-300 font-bold py-2 px-4 rounded-sm text-sm hover:bg-[var(--cor-ouro)] hover:text-black hover:border-transparent transition-colors">Catecismos</button>
+                        <button data-filter="devocionais" class="filter-btn bg-black/20 border border-gray-700 text-gray-300 font-bold py-2 px-4 rounded-sm text-sm hover:bg-[var(--cor-ouro)] hover:text-black hover:border-transparent transition-colors">Devocionais</button>
+                    </div>
+                </div>
+
+                <div id="ebooks-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+                    {% for ebook in ebooks %}
+                    <div class="ebook-card text-center group" data-category="{{ ebook.categoria }}">
+                        <img src="{{ url_for('static', filename='covers/' + ebook.nome_arquivo_capa) }}" alt="Capa do E-book {{ ebook.titulo }}" class="rounded-md shadow-lg w-full aspect-[2/3] object-cover group-hover:shadow-black/50 group-hover:-translate-y-1 transition-all duration-300">
+                        <h3 class="font-cinzel text-lg mt-4 text-gray-200 tracking-wide">{{ ebook.titulo }}</h3>
+                        <a href="{{ url_for('static', filename='ebooks/' + ebook.nome_arquivo_pdf) }}" download class="mt-2 inline-block bg-transparent border border-[var(--cor-ouro)] text-[var(--cor-ouro)] font-bold text-sm py-2 px-6 rounded-sm hover:bg-[var(--cor-ouro)] hover:text-black transition-colors duration-300">
+                            Baixar
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="no-ebook-results" class="hidden text-center py-10">
+                    <p class="text-xl text-gray-400 italic">Nenhum manuscrito encontrado com estes critérios.</p>
+                </div>
+            </section>
+
+            <!-- Divisor, como um arco de pedra -->
+            <div class="border-t-2 border-double border-[var(--cor-ouro)]/50 my-16 md:my-24 max-w-2xl mx-auto"></div>
+
+            <!-- Seção de Artigos -->
+            <section id="articles-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-cinzel font-bold tracking-wider text-[var(--cor-ouro)]">
+                        Arsenal dos Escribas
+                    </h2>
+                    <p class="mt-2 text-lg text-gray-300 italic">
+                        Análises e reflexões para o campo de batalha diário.
+                    </p>
+                </div>
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for artigo in artigos %}
+                    <div class="bg-black/40 rounded-lg overflow-hidden border border-gray-800/50 shadow-lg hover:shadow-black/50 transition-shadow duration-300 group flex flex-col">
+                        <div class="overflow-hidden">
+                            <img src="{{ url_for('static', filename='article_covers/' + artigo.nome_arquivo_capa) }}" alt="Capa do artigo {{ artigo.titulo }}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-cinzel font-bold mb-3 text-[var(--cor-ouro)] h-24">{{ artigo.titulo }}</h3>
+                            <p class="text-gray-300 mb-6 flex-grow">{{ artigo.resumo }}</p>
+                            <a href="{{ url_for('pagina_artigo', artigo_id=artigo.id) }}" class="font-bold text-[var(--cor-ouro)] hover:text-[var(--cor-ouro-brilho)] transition-colors duration-300 self-start mt-auto">
+                                Ler o Manuscrito &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                     <p class="text-center col-span-full text-gray-400 italic">Nenhum artigo foi selado ainda.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- O script de filtro não precisa ser alterado, ele é funcional -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterButtonsContainer = document.getElementById('ebook-filter-buttons');
+        const searchInput = document.getElementById('ebook-search-input');
+        if (!filterButtonsContainer || !searchInput) return;
+
+        const ebooks = document.querySelectorAll('.ebook-card');
+        const noResultsMessage = document.getElementById('no-ebook-results');
+        const ebooksGrid = document.getElementById('ebooks-grid');
+
+        function filterAndSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilterButton = filterButtonsContainer.querySelector('.bg-\\[var\\(--cor-ouro\\)\\]');
+            const activeFilter = activeFilterButton ? activeFilterButton.dataset.filter : 'all';
+            
+            let resultsFound = 0;
+
+            ebooks.forEach(ebook => {
+                const title = ebook.querySelector('h3').textContent.toLowerCase();
+                const category = ebook.dataset.category || '';
+
+                const matchesSearch = title.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category.includes(activeFilter);
+
+                if (matchesSearch && matchesFilter) {
+                    ebook.style.display = 'block';
+                    resultsFound++;
+                } else {
+                    ebook.style.display = 'none';
+                }
+            });
+
+            if (resultsFound === 0) {
+                 noResultsMessage.style.display = 'block';
+                 ebooksGrid.style.display = 'none';
+            } else {
+                 noResultsMessage.style.display = 'none';
+                 ebooksGrid.style.display = 'grid';
+            }
+        }
+
+        filterButtonsContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                filterButtonsContainer.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-[var(--cor-ouro)]', 'text-black');
+                    btn.classList.add('bg-black/20', 'border', 'border-gray-700', 'text-gray-300');
+                });
+                e.target.classList.add('bg-[var(--cor-ouro)]', 'text-black');
+                e.target.classList.remove('bg-black/20', 'border', 'border-gray-700', 'text-gray-300');
+                
+                filterAndSearch();
+            }
+        });
+
+        searchInput.addEventListener('input', filterAndSearch);
+    });
+</script>
+{% endblock %}

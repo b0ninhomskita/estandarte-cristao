@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artigo.titulo }} - Estandarte Cristão{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* Estilos para o conteúdo do artigo, para garantir a legibilidade e a beleza */
+    .article-body h2 {
+        font-family: 'Cinzel Decorative', serif;
+        font-weight: 700;
+        font-size: 2.25rem; /* text-4xl */
+        color: var(--cor-ouro);
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--cor-ouro);
+    }
+    .article-body p {
+        font-size: 1.25rem; /* text-xl */
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        color: var(--cor-vitral-texto);
+    }
+    .article-body blockquote {
+        border-left: 4px solid var(--cor-ouro);
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        font-style: italic;
+        font-size: 1.25rem;
+        color: #d1d5db; /* cinza claro */
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="py-12 md:py-20">
+    <div class="container mx-auto px-6">
+        <!-- O Vitral que emoldura o artigo -->
+        <div class="vitral-pane p-8 md:p-16 rounded-lg max-w-4xl mx-auto">
+            <article>
+                <!-- Título do Manuscrito -->
+                <h1 class="text-4xl md:text-6xl font-cinzel font-bold text-center text-[var(--cor-ouro-brilho)]" style="text-shadow: 1px 1px 3px #000;">
+                    {{ artigo.titulo }}
+                </h1>
+
+                <!-- Capa do Artigo, como uma iluminura -->
+                <img src="{{ url_for('static', filename='article_covers/' + artigo.nome_arquivo_capa) }}" alt="Capa do artigo {{ artigo.titulo }}" class="w-full rounded-lg shadow-lg my-12 border-2 border-black/50">
+                
+                <!-- O Corpo do Manuscrito -->
+                <div class="article-body">
+                    <!-- O filtro |safe é crucial para renderizar HTML como <h2> ou <blockquote> que você possa ter escrito no conteúdo -->
+                    {{ artigo.conteudo | safe }}
+                </div>
+
+                <!-- Botão para Voltar ao Acervo -->
+                <div class="text-center mt-16 border-t border-gray-700/50 pt-8">
+                    <a href="{{ url_for('conteudo') }}" class="bg-transparent border-2 border-[var(--cor-ouro)] text-[var(--cor-ouro)] font-bold text-lg py-3 px-10 rounded-sm hover:bg-[var(--cor-ouro)] hover:text-black transition-all duration-300">
+                        &larr; Voltar ao Acervo
+                    </a>
+                </div>
+
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock %}

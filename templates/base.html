@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF--8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Estandarte Cristão{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- As Fontes Originais: Impacto e Legibilidade -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* A Paleta de Cores Original */
+        :root {
+            --cor-fundo: #111827; /* bg-gray-900 */
+            --cor-painel: #1f2937; /* bg-gray-800 */
+            --cor-texto: #f9fafb; /* gray-50 */
+            --cor-destaque: #f59e0b; /* amber-500 */
+            --cor-destaque-hover: #fbbf24; /* amber-400 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+        }
+
+        /* A Fonte de Impacto Original para Títulos */
+        .font-bebas {
+            font-family: 'Bebas Neue', cursive;
+        }
+    </style>
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="antialiased">
+
+    <!-- O Cabeçalho Original AGORA COM O LOGO -->
+    <header class="bg-[var(--cor-painel)]/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- CORREÇÃO PRINCIPAL AQUI -->
+            <a href="{{ url_for('home') }}" class="flex items-center gap-4">
+                <!-- Imagem do Logo -->
+                <img src="{{ url_for('static', filename='img/ChatGPT_Image_31_de_jul._de_2025__22_32_55-removebg-preview.png') }}" alt="Logo Estandarte Cristão" class="h-10 w-auto">
+                <!-- Nome do Site -->
+                <span class="text-3xl font-bebas text-[var(--cor-destaque-hover)] tracking-wider">
+                    Estandarte Cristão
+                </span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 font-bold">
+                <a href="{{ url_for('home') }}" class="text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Início</a>
+                <a href="{{ url_for('conteudo') }}" class="text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Acervo</a>
+                <a href="{{ url_for('sobre') }}" class="text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Sobre</a>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-[var(--cor-painel)] border-t border-gray-700">
+             <a href="{{ url_for('home') }}" class="block text-center py-3 font-bold text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Início</a>
+             <a href="{{ url_for('conteudo') }}" class="block text-center py-3 font-bold text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Acervo</a>
+             <a href="{{ url_for('sobre') }}" class="block text-center py-3 font-bold text-gray-300 hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">Sobre</a>
+        </div>
+    </header>
+
+    <main class="py-12 md:py-20">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- O Rodapé Original -->
+    <footer class="bg-[var(--cor-painel)] border-t border-gray-700 mt-16 md:mt-24">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <p class="font-bebas text-2xl text-[var(--cor-destaque-hover)]">Estandarte Cristão</p>
+            <p class="mt-2 text-sm">
+                Batalhando o bom combate com a espada do Espírito, que é a Palavra de Deus.
+            </p>
+            <p class="mt-6 text-xs">
+                &copy; 2024 Estandarte Cristão. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const menuButton = document.getElementById('mobile-menu-button');
+        if (menuButton) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

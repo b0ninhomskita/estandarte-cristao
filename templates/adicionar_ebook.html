@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar E-book - Estandarte Cristão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white p-4 md:p-8">
+    <div class="container mx-auto max-w-3xl">
+        <h1 class="text-4xl font-bebas text-amber-400 mb-8">Adicionar Novo E-book</h1>
+        
+        <form method="POST" enctype="multipart/form-data" class="space-y-6 bg-gray-700 p-8 rounded-lg">
+            <div>
+                <label for="titulo" class="block mb-2 font-bold text-gray-300">Título do E-book</label>
+                <input type="text" name="titulo" id="titulo" class="w-full bg-gray-600 p-3 rounded border border-gray-500 focus:outline-none focus:border-amber-400" required>
+            </div>
+            <div>
+                <label for="categoria" class="block mb-2 font-bold text-gray-300">Categoria</label>
+                <select name="categoria" id="categoria" class="w-full bg-gray-600 p-3 rounded border border-gray-500" required>
+                    <option value="apologetica">Apologética</option>
+                    <option value="confissoes">Confissões</option>
+                    <option value="catecismos">Catecismos</option>
+                    <option value="devocionais">Devocionais</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <!-- Upload do PDF -->
+                <div class="bg-gray-800 p-4 rounded-lg border-2 border-dashed border-gray-600">
+                    <label for="arquivo_pdf" class="block mb-2 font-bold text-center text-gray-300">Arquivo PDF</label>
+                    <p class="text-xs text-center text-gray-400 mb-4">Selecione o e-book</p>
+                    <input type="file" name="arquivo_pdf" id="arquivo_pdf" accept=".pdf" class="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-gray-900 hover:file:bg-amber-400" required>
+                </div>
+                
+                <!-- Upload da Capa -->
+                <div class="bg-gray-800 p-4 rounded-lg border-2 border-dashed border-gray-600">
+                    <label for="arquivo_capa" class="block mb-2 font-bold text-center text-gray-300">Imagem da Capa</g>
+                    <p class="text-xs text-center text-gray-400 mb-4">Formatos: JPG, PNG</p>
+                    <input type="file" name="arquivo_capa" id="arquivo_capa" accept="image/png, image/jpeg, image/jpg" class="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-gray-900 hover:file:bg-amber-400" required>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 pt-6">
+                <a href="{{ url_for('admin') }}" class="bg-gray-500 text-white font-bold py-3 px-6 rounded hover:bg-gray-400 transition-colors">Cancelar</a>
+                <button type="submit" class="bg-amber-500 text-gray-900 font-bold py-3 px-6 rounded hover:bg-amber-400 transition-colors">Salvar E-book</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

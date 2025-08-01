@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Estandarte Cristão{% endblock %}
+
+{% block content %}
+<!-- Seção Principal (Hero) -->
+<section class="bg-gray-800 py-32 md:py-48 text-center text-white" style="background-image: linear-gradient(rgba(31, 41, 55, 0.8), rgba(31, 41, 55, 1)), url('https://placehold.co/1920x1080/1f2937/FFFFFF?text=Estandarte'); background-size: cover; background-position: center;">
+    <div class="container mx-auto px-6">
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bebas tracking-widest leading-tight">
+            A FÉ QUE MOVE O UNIVERSO
+        </h1>
+        <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-gray-300">
+            Analisando as verdades eternas da Escritura com a profundidade e a seriedade das maiores sagas.
+        </p>
+        <a href="{{ url_for('conteudo') }}" class="mt-8 inline-block bg-[var(--cor-destaque)] text-gray-900 font-bold font-bebas text-2xl tracking-widest py-3 px-10 rounded-lg hover:bg-[var(--cor-destaque-hover)] transition-transform duration-300 transform hover:scale-105 shadow-lg shadow-amber-500/20">
+            Explorar Acervo
+        </a>
+    </div>
+</section>
+
+<!-- Seção de Artigos em Destaque -->
+<section id="destaques" class="py-20 bg-[var(--cor-fundo)]">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl md:text-5xl font-bebas text-center mb-12 tracking-wider text-[var(--cor-destaque-hover)]">
+            Investigações Recentes
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for artigo in artigos %}
+            <div class="bg-[var(--cor-painel)] rounded-lg overflow-hidden shadow-lg hover:shadow-[var(--cor-destaque)]/20 transition-shadow duration-300 transform hover:-translate-y-2">
+                <img src="{{ url_for('static', filename='article_covers/' + artigo.nome_arquivo_capa) }}" alt="Capa do artigo {{ artigo.titulo }}" class="w-full h-56 object-cover">
+                <div class="p-6">
+                    <h3 class="text-2xl font-bebas mb-3 text-[var(--cor-destaque-hover)] h-16">{{ artigo.titulo }}</h3>
+                    <p class="text-gray-400 mb-6 h-24 overflow-hidden">{{ artigo.resumo }}</p>
+                    <a href="{{ url_for('pagina_artigo', artigo_id=artigo.id) }}" class="font-bold text-[var(--cor-destaque)] hover:text-[var(--cor-destaque-hover)] transition-colors duration-300">
+                        Ler mais &rarr;
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center col-span-3 text-gray-400">Nenhum artigo publicado ainda. Volte em breve!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

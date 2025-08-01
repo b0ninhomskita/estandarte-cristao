@@ -6,12 +6,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-segura-e-dificil-de-adivinhar'
 
 # Configuração que busca a URL do banco de dados do Render
-# A linha .replace() é uma correção de compatibilidade importante.
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url.replace("postgres://", "postgresql://", 1)
 else:
-    # Fallback para um banco de dados local se a URL não for encontrada
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -67,7 +65,7 @@ def admin():
     artigos = Artigo.query.all()
     ebooks = Ebook.query.all()
     return render_template('admin.html', artigos=artigos, ebooks=ebooks)
-
+# ... (todas as suas outras rotas de admin continuam aqui, sem alterações) ...
 @app.route("/admin/adicionar_artigo", methods=['GET', 'POST'])
 def adicionar_artigo():
     if request.method == 'POST':
@@ -147,11 +145,13 @@ def deletar_ebook(ebook_id):
     return redirect(url_for('admin'))
 
 
-# --- ROTINA DE CONSTRUÇÃO AUTOMÁTICA ---
-# Este bloco de código cria as tabelas do banco de dados se elas não existirem.
-# Ele roda toda vez que o site é iniciado.
-with app.app_context():
-    db.create_all()
+# --- A NOSSA CHAVE MESTRA ---
+@app.route('/criar-banco-de-dados-agora')
+def criar_banco():
+    with app.app_context():
+        db.create_all()
+    return "<h1>As prateleiras do cofre (tabelas do banco de dados) foram criadas com sucesso!</h1><p>Agora você pode voltar para a página <a href='/admin'>/admin</a> e começar a cadastrar o conteúdo.</p>"
+
 
 if __name__ == '__main__':
     app.run(debug=True)

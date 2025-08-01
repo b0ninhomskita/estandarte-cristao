@@ -6,7 +6,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'uma-chave-secreta-muito-segura-e-dificil-de-adivinhar'
 
 # Configuração que busca a URL do banco de dados do Render
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+# A linha .replace() é uma correção de compatibilidade importante.
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url.replace("postgres://", "postgresql://", 1)
+else:
+    # Fallback para um banco de dados local se a URL não for encontrada
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configuração das pastas de upload
@@ -35,7 +42,6 @@ class Ebook(db.Model):
     nome_arquivo_capa = db.Column(db.String(100), nullable=False, default='default_ebook.jpg')
 
 # --- Rotas (sem alterações) ---
-# (Todas as suas rotas como @app.route("/") etc. continuam aqui)
 @app.route("/")
 def home():
     artigos_recentes = Artigo.query.order_by(Artigo.id.desc()).limit(3).all()
@@ -141,13 +147,11 @@ def deletar_ebook(ebook_id):
     return redirect(url_for('admin'))
 
 
-# --- NOVA FERRAMENTA DE CONSTRUÇÃO ---
-@app.cli.command("create-db")
-def create_db_command():
-    """Cria as tabelas do banco de dados."""
-    with app.app_context():
-        db.create_all()
-    print("Banco de dados e tabelas criados com sucesso!")
+# --- ROTINA DE CONSTRUÇÃO AUTOMÁTICA ---
+# Este bloco de código cria as tabelas do banco de dados se elas não existirem.
+# Ele roda toda vez que o site é iniciado.
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)

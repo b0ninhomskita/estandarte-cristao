@@ -10,6 +10,7 @@ database_url = os.environ.get('DATABASE_URL')
 if database_url:
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url.replace("postgres://", "postgresql://", 1)
 else:
+    # Fallback para um banco de dados local se a URL não for encontrada
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,7 +25,7 @@ os.makedirs(app.config['ARTICLE_COVERS_FOLDER'], exist_ok=True)
 
 db = SQLAlchemy(app)
 
-# --- Modelos do Banco de Dados (sem alterações) ---
+# --- Modelos do Banco de Dados ---
 class Artigo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(150), nullable=False)
@@ -39,7 +40,7 @@ class Ebook(db.Model):
     nome_arquivo_pdf = db.Column(db.String(100), nullable=False)
     nome_arquivo_capa = db.Column(db.String(100), nullable=False, default='default_ebook.jpg')
 
-# --- Rotas (sem alterações) ---
+# --- Rotas Públicas ---
 @app.route("/")
 def home():
     artigos_recentes = Artigo.query.order_by(Artigo.id.desc()).limit(3).all()
@@ -60,12 +61,13 @@ def pagina_artigo(artigo_id):
 def sobre():
     return render_template('sobre.html')
 
+# --- Rotas Administrativas ---
 @app.route("/admin")
 def admin():
     artigos = Artigo.query.all()
     ebooks = Ebook.query.all()
     return render_template('admin.html', artigos=artigos, ebooks=ebooks)
-# ... (todas as suas outras rotas de admin continuam aqui, sem alterações) ...
+
 @app.route("/admin/adicionar_artigo", methods=['GET', 'POST'])
 def adicionar_artigo():
     if request.method == 'POST':
@@ -143,15 +145,6 @@ def deletar_ebook(ebook_id):
     db.session.commit()
     flash('E-book deletado com sucesso!', 'success')
     return redirect(url_for('admin'))
-
-
-# --- A NOSSA CHAVE MESTRA ---
-@app.route('/criar-banco-de-dados-agora')
-def criar_banco():
-    with app.app_context():
-        db.create_all()
-    return "<h1>As prateleiras do cofre (tabelas do banco de dados) foram criadas com sucesso!</h1><p>Agora você pode voltar para a página <a href='/admin'>/admin</a> e começar a cadastrar o conteúdo.</p>"
-
 
 if __name__ == '__main__':
     app.run(debug=True)
